@@ -1,0 +1,59 @@
+body {
+    font-family: Garamond, serif;    font-size: large;
+}
+
+table { 
+  width: 30%;
+  border-collapse: collapse; 
+}
+/* Zebra striping */
+tr:nth-of-type(odd) { 
+  background: #eee; 
+}
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
+td, th { 
+  padding: 6px; 
+  border: 1px solid #ccc; 
+  text-align: center; 
+  font-size: 20px;
+}
+
+li {
+    text-align: left;
+    font-size: 20px;
+    margin-left: 45%;
+}
+
+button {
+    font-family: 'Courier New', monospace;
+    height: 50px;
+    width: 100px;
+    font-size: medium;
+}
+
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    td, th {
+        overflow: hidden;
+        max-width: 85px;
+        font-size: small;
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    li {
+        font-size: 20px;
+        margin-left: -70px;
+    }
+
+}
