@@ -37,6 +37,13 @@ export default class DailyGames extends Component {
           .then((req) => {
             const $ = cheerio.load(req.data)
             $('tbody').each( function(i, tbody) {
+
+                var parentTable = $(this).parent();
+                var parentDiv = $(parentTable).parent();
+                var cardDiv = $(parentDiv).parent();
+                var gameStatus = $(cardDiv, 'span .game-status');
+                var gameStatusText = gameStatus.text().trim()
+
                 var children = $(this).children();
                 if (children.length === 2){
 
@@ -50,19 +57,29 @@ export default class DailyGames extends Component {
                                 'scoreA': $(teamA[1]).text().trim(),
                                 'teamB': $(teamB[0]).text().trim(),
                                 'scoreB': $(teamB[1]).text().trim(),
-                                'diff': 'scheduled'
+                                'diff': 100,
+                                'status': 'scheduled'
                             }
                             gameData.push(data)    
                         }
                     }
 
                     if (teamA.length === 6 && teamB.length === 6) {
+
+                        var finalGameStatus = 'scheduled'
+                        if (gameStatusText.substring(0,5) == 'FINAL'){
+                            finalGameStatus = 'Final'
+                        } else {
+                            finalGameStatus = gameStatusText.split(' ')[0]
+                        }
+
                         const data = {
                             'teamA': $(teamA[0]).text().trim(),
                             'scoreA': parseFloat($(teamA[5]).text().trim()),
                             'teamB': $(teamB[0]).text().trim(),
                             'scoreB': parseFloat($(teamB[5]).text().trim()),
-                            'diff': Math.abs(parseFloat($(teamA[5]).text().trim()) -  parseFloat($(teamB[5]).text().trim()))
+                            'diff': Math.abs(parseFloat($(teamA[5]).text().trim()) -  parseFloat($(teamB[5]).text().trim())),
+                            'status': finalGameStatus
                         }
                         gameData.push(data)
                     }
@@ -148,7 +165,7 @@ export default class DailyGames extends Component {
                                     const YOUTUBE_BASE_URL = 'https://www.youtube.com/results?search_query=nba+'
                                     const game_url = YOUTUBE_BASE_URL + `${game['teamA']}+vs+${game['teamB']}`
 
-                                    if (game['diff'] === 'scheduled') {
+                                    if (game['status'] === 'scheduled') {
                                         return (
                                             <tr key={game['teamA']}>
                                                 <td> {game['teamA']} </td>
@@ -161,8 +178,15 @@ export default class DailyGames extends Component {
                                             <tr key={game['teamA']}>
                                                 <td> {game['teamA']} </td>
                                                 <td> {game['teamB']} </td>
-                                                <td> &lt; {Math.ceil(game['diff']/5)*5} pts </td>
-                                                <td> <a href={game_url} target="_blank" rel="noreferrer"> Link </a> </td>
+                                                {game['diff'] === 0 ? 
+                                                    <td> It's tied! </td> :
+                                                    <td> &lt; {Math.ceil(game['diff']/5)*5} pts </td> 
+                                                }
+                                                
+                                                {game['status'] === 'Final' ? 
+                                                    <td> <a href={game_url} target="_blank" rel="noreferrer"> Highlights </a> </td> :
+                                                    <td> {game['status']} Quater</td>
+                                                }
                                             </tr>
                                         )
                                     }
