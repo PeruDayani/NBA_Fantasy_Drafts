@@ -43,6 +43,19 @@ export default class DailyGames extends Component {
                     var teamA = $(children[0]).children()
                     var teamB = $(children[1]).children()
 
+                    if (teamA.length === 2 && teamB.length === 2) {
+                        if($(teamA[0]).text().trim()){
+                            const data = {
+                                'teamA': $(teamA[0]).text().trim(),
+                                'scoreA': $(teamA[1]).text().trim(),
+                                'teamB': $(teamB[0]).text().trim(),
+                                'scoreB': $(teamB[1]).text().trim(),
+                                'diff': 'scheduled'
+                            }
+                            gameData.push(data)    
+                        }
+                    }
+
                     if (teamA.length === 6 && teamB.length === 6) {
                         const data = {
                             'teamA': $(teamA[0]).text().trim(),
@@ -99,7 +112,6 @@ export default class DailyGames extends Component {
         })
     }
 
-
     renderGames() {
         return (
             <div>
@@ -126,7 +138,7 @@ export default class DailyGames extends Component {
                                 <th>Team A</th>
                                 <th>Team B</th>
                                 <th>Score Diff</th>
-                                <th> Link </th>
+                                <th>Link</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,14 +147,26 @@ export default class DailyGames extends Component {
 
                                     const YOUTUBE_BASE_URL = 'https://www.youtube.com/results?search_query=nba+'
                                     const game_url = YOUTUBE_BASE_URL + `${game['teamA']}+vs+${game['teamB']}`
-                                    return (
-                                        <tr key={game['teamA']}>
-                                            <td> {game['teamA']} </td>
-                                            <td> {game['teamB']} </td>
-                                            <td> &lt; {Math.ceil(game['diff']/5)*5} pts </td>
-                                            <td> <a href={game_url} target="_blank" rel="noreferrer"> Link </a> </td>
-                                        </tr>
-                                    )
+
+                                    if (game['diff'] === 'scheduled') {
+                                        return (
+                                            <tr key={game['teamA']}>
+                                                <td> {game['teamA']} </td>
+                                                <td> {game['teamB']} </td>
+                                                <td colSpan="2"> Scheduled </td>
+                                            </tr>
+                                        )
+                                    } else {
+                                        return (
+                                            <tr key={game['teamA']}>
+                                                <td> {game['teamA']} </td>
+                                                <td> {game['teamB']} </td>
+                                                <td> &lt; {Math.ceil(game['diff']/5)*5} pts </td>
+                                                <td> <a href={game_url} target="_blank" rel="noreferrer"> Link </a> </td>
+                                            </tr>
+                                        )
+                                    }
+  
                                 })
                             }
                         </tbody>
@@ -166,7 +190,7 @@ export default class DailyGames extends Component {
                 
                 { this.state.loadedData ? this.renderGames() : <div> Loading ... </div>}
 
-                <button onClick={() => this.fetchData()}> Refresh </button>
+                <button onClick={() => this.fetchData(this.state.searchDate)}> Refresh </button>
             </div>
         )
     }
