@@ -67,7 +67,7 @@ export default class DailyGames extends Component {
                     if (teamA.length === 6 && teamB.length === 6) {
 
                         var finalGameStatus = 'scheduled'
-                        if (gameStatusText.substring(0,5) == 'FINAL'){
+                        if (gameStatusText.substring(0,5) === 'FINAL'){
                             finalGameStatus = 'Final'
                         } else {
                             finalGameStatus = gameStatusText.split(' ')[0]
