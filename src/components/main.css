@@ -1,5 +1,6 @@
 body {
-    font-family: Garamond, serif;    font-size: large;
+    font-family: Garamond, serif;
+    font-size: large;
 }
 
 table { 
@@ -31,7 +32,8 @@ li {
 button {
     font-family: 'Courier New', monospace;
     height: 50px;
-    width: 100px;
+    width: 150px;
+    margin: 10px;
     font-size: medium;
 }
 
