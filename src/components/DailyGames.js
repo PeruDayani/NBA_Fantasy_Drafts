@@ -2,6 +2,49 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import cheerio from 'cheerio'
 
+const TEAMS = [
+    'Hawks',
+    'Celtics',
+    'Nets',
+    'Hornets',
+    'Bulls',
+    'Cavaliers',
+    'Mavericks',
+    'Nuggets',
+    'Pistons',
+    'Warriors',
+    'Rockets',
+    'Pacers',
+    'Clippers',
+    'Lakers',
+    'Grizzlies', 
+    'Heat',
+    'Bucks',
+    'Timberwolves',
+    'Pelicans',
+    'Knicks',
+    'Thunder',
+    'Magic',
+    '76ers',
+    'Suns',
+    'Blazers', 
+    'Kings',
+    'Spurs',
+    'Raptors', 
+    'Jazz',
+    'Wizards'
+]
+
+function cleanTeamName(name) {
+    let cleanName = name
+    TEAMS.forEach((team) => {
+        if ( name.search(new RegExp(team, "i")) !== -1 ) {
+            cleanName = team
+        }
+    })
+    return cleanName
+}
+
 export default class DailyGames extends Component {
 
     constructor(props){
@@ -52,10 +95,11 @@ export default class DailyGames extends Component {
 
                     if (teamA.length === 2 && teamB.length === 2) {
                         if($(teamA[0]).text().trim()){
+                            
                             const data = {
-                                'teamA': $(teamA[0]).text().trim(),
+                                'teamA': cleanTeamName($(teamA[0]).text().trim()),
                                 'scoreA': $(teamA[1]).text().trim(),
-                                'teamB': $(teamB[0]).text().trim(),
+                                'teamB': cleanTeamName($(teamB[0]).text().trim()),
                                 'scoreB': $(teamB[1]).text().trim(),
                                 'diff': 100,
                                 'status': 'scheduled'
@@ -74,9 +118,9 @@ export default class DailyGames extends Component {
                         }
 
                         const data = {
-                            'teamA': $(teamA[0]).text().trim(),
+                            'teamA': cleanTeamName($(teamA[0]).text().trim()),
                             'scoreA': parseFloat($(teamA[5]).text().trim()),
-                            'teamB': $(teamB[0]).text().trim(),
+                            'teamB': cleanTeamName($(teamB[0]).text().trim()),
                             'scoreB': parseFloat($(teamB[5]).text().trim()),
                             'diff': Math.abs(parseFloat($(teamA[5]).text().trim()) -  parseFloat($(teamB[5]).text().trim())),
                             'status': finalGameStatus
